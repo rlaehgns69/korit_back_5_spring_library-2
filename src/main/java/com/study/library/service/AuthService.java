@@ -45,7 +45,7 @@ public class AuthService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)//예외 하나라도 생기면 무조건 롤백
     public void oAuth2Signup(OAuth2SignupReqDto oAuth2SignupReqDto) {
         int successCount = 0;
         User user = oAuth2SignupReqDto.toEntity(passwordEncoder);

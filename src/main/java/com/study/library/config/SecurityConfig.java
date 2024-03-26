@@ -44,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/mail/authenticate")
                 .permitAll()
+                .antMatchers("/admin/**")
+                .hasRole("ADMIN") // security가 알아서 role떼고 jwtAuthentication이후
                 .anyRequest()
                 .authenticated()
                 .and()
