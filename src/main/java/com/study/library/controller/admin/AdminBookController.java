@@ -1,21 +1,43 @@
 package com.study.library.controller.admin;
 
 import com.study.library.aop.annotation.ParamsPrintAspect;
+import com.study.library.aop.annotation.ValidAspect;
 import com.study.library.dto.RegisterBookReqDto;
+import com.study.library.dto.SearchBookReqDto;
+import com.study.library.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/admin")
 public class AdminBookController {
 
-    @ParamsPrintAspect//Dto잘들어오는지 확인
-    @PostMapping("/book")
-    public ResponseEntity<?> saveBook(@RequestBody RegisterBookReqDto registerBookReqDto) {
+    @Autowired
+    private BookService bookService;
 
-        return ResponseEntity.created(null).body(null);
+//    @ParamsPrintAspect//Dto잘들어오는지 확인
+    @ValidAspect
+    @PostMapping("/book")
+    public ResponseEntity<?> saveBook(@Valid @RequestBody RegisterBookReqDto registerBookReqDto,
+                                      BindingResult bindingResult) {
+
+        bookService.saveBook(registerBookReqDto);
+
+        return ResponseEntity.created(null).body(true);
+    }
+
+//    @ParamsPrintAspect
+    @GetMapping("/books")
+    public ResponseEntity<?> searchBooks(SearchBookReqDto searchBookReqDto) {
+        return ResponseEntity.ok(bookService.searchBooks(searchBookReqDto));
+    }
+
+    @GetMapping("/books/count")
+    public ResponseEntity<?> getCount(SearchBookReqDto searchBookReqDto) {
+        return ResponseEntity.ok(bookService.getBookCount(searchBookReqDto));
     }
 }
